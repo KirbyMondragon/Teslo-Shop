@@ -53,7 +53,7 @@ export class ProductsService {
     let product: Product;
 
     if ( isUUID(term) ) {
-      product = await this.productRepository.findOneBy({ id: term });
+      product = await this.productRepository.findOneBy({ id: term }); 
     } else {
       const queryBuilder = this.productRepository.createQueryBuilder(); 
       product = await queryBuilder
@@ -63,15 +63,31 @@ export class ProductsService {
         }).getOne();
     }
 
-
     if ( !product ) 
       throw new NotFoundException(`Product with ${ term } not found`);
 
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    
+    const product = await this.productRepository.preload({
+      id: id,
+      ...updateProductDto
+    });
+    
+    if( !product ) throw new NotFoundException(`The product ${id} don't exists`);
+
+    try {
+      await this.productRepository.save( product );
+      
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+    
+    return product;
+    
+    
   }
 
  async remove(id: string) {  

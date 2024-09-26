@@ -40,26 +40,35 @@ export class Product {
     @Column('text')
     gender: string;
 
-
-    @Column('text', {
-        array: true,
-        default: []
-    })
-    tags: string[];
-
+    @Column('text',{
+            array:true,
+            default: []
+        }
+    )
+    tags:string[];
     // images
 
-    @BeforeInsert()
-    checkSlugInsert(){
 
-        if(!this.slug){
+    @BeforeInsert()
+    checkSlugInsert() {
+
+        if ( !this.slug ) {
             this.slug = this.title;
         }
 
         this.slug = this.slug
-            .toLocaleLowerCase()
-            .replaceAll(" ", "_")
-            .replaceAll("'", "")
+            .toLowerCase()
+            .replaceAll(' ','_')
+            .replaceAll("'",'')
+
+    }
+
+    @BeforeInsert()
+    checkSlugUpdate(){
+        this.slug = this.slug
+            .toLowerCase()
+            .replaceAll(' ','_')
+            .replaceAll("'",'')
     }
 
 
