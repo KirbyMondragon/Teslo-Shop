@@ -1,4 +1,5 @@
 import { IsArray, IsIn, IsInt, IsNumber, IsOptional, IsPositive, IsString, MinLength } from 'class-validator';
+import { BeforeInsert } from 'typeorm';
 
 export class CreateProductDto {
 
@@ -30,7 +31,7 @@ export class CreateProductDto {
 
 
     @IsIn(['men', 'women', 'kid', 'unisex'])
-    gender: string;
+    gender: string;   
 
 
 }
